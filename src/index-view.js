@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
+import PropTypes from "prop-types";
 
 const IndexWrapper = styled.div`
   width: 100%;
@@ -36,6 +37,17 @@ const IndexView = ({ contents, handleClick }) => {
   ));
 
   return <IndexWrapper>{items}</IndexWrapper>;
+};
+
+IndexView.propTypes = {
+  contents: PropTypes.arrayOf(
+    PropTypes.shape({
+      recipe: PropTypes.string.isRequired,
+      ingredients: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+      directions: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired
+    })
+  ).isRequired,
+  handleClick: PropTypes.func.isRequired
 };
 
 export default IndexView;

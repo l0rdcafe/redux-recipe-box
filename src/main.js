@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Link, Redirect, Switch } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
+import PropTypes from "prop-types";
 import RecipePane from "./recipe-pane";
 import IndexView from "./index-view";
 import Dialog from "./dialog";
@@ -88,7 +89,6 @@ class Main extends React.Component {
                               )
                             )
                           }
-                          recipes={this.props.recipes}
                         />
                       )}
                     />
@@ -110,7 +110,6 @@ class Main extends React.Component {
                   handleAdd={() =>
                     this.handleAdd(this.name.value, this.ings.value.split("\\"), this.dirs.value.split("\\"))
                   }
-                  recipes={this.props.recipes}
                   name={ref => (this.name = ref)}
                   ings={ref => (this.ings = ref)}
                   dirs={ref => (this.dirs = ref)}
@@ -130,5 +129,18 @@ class Main extends React.Component {
     );
   }
 }
+
+Main.propTypes = {
+  recipes: PropTypes.arrayOf(
+    PropTypes.shape({
+      recipe: PropTypes.string.isRequired,
+      ingredients: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+      directions: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired
+    })
+  ).isRequired,
+  removeRecipe: PropTypes.func.isRequired,
+  addRecipe: PropTypes.func.isRequired,
+  editRecipe: PropTypes.func.isRequired
+};
 
 export default Main;

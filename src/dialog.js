@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { FaTimes } from "react-icons/fa";
+import PropTypes from "prop-types";
 
 const DialogWrapper = styled.div`
   text-align: center;
@@ -102,7 +103,6 @@ const Dialog = ({
   handleEdit,
   buttonType,
   currRecipe,
-  recipes,
   name,
   ings,
   dirs
@@ -156,5 +156,22 @@ const Dialog = ({
     </Link>
   </DialogWrapper>
 );
+
+Dialog.propTypes = {
+  dialogType: PropTypes.string.isRequired,
+  nameID: PropTypes.string.isRequired,
+  ingredientsID: PropTypes.string.isRequired,
+  directionsID: PropTypes.string.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  submitID: PropTypes.string.isRequired,
+  closeID: PropTypes.string.isRequired,
+  handleAdd: PropTypes.func.isRequired,
+  handleEdit: PropTypes.func.isRequired,
+  buttonType: PropTypes.string.isRequired,
+  currRecipe: PropTypes.isRequired,
+  name: PropTypes.isRequired,
+  ings: PropTypes.isRequired,
+  dirs: PropTypes.isRequired
+};
 
 export default Dialog;

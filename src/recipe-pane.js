@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import PropTypes from "prop-types";
 
 const RecipeWrapper = styled.div`
   .recipe-view {
@@ -79,6 +80,15 @@ const RecipePane = ({ displayRecipe, handleDelete }) => {
   );
 
   return <div>{recipe}</div>;
+};
+
+RecipePane.propTypes = {
+  displayRecipe: PropTypes.shape({
+    recipe: PropTypes.string.isRequired,
+    ingredients: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+    directions: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired
+  }).isRequired,
+  handleDelete: PropTypes.func.isRequired
 };
 
 export default RecipePane;
