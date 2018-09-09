@@ -27,7 +27,7 @@ const IndexWrapper = styled.div`
 const IndexView = ({ contents, handleClick }) => {
   const items = contents.map((recipe, i) => (
     <NavLink
-      to={`/${recipe.recipe.toLowerCase()}`}
+      to={`/${recipe.recipe.toLowerCase().replace(/\s+/g, "-")}`}
       onClick={() => handleClick(recipe)}
       key={i}
       activeStyle={{ color: "#176f8a", fontWeight: "700" }}

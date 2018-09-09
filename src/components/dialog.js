@@ -1,8 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { FaTimes } from "react-icons/fa";
 import PropTypes from "prop-types";
+import DialogForm from "./dialog-form";
 
 const DialogWrapper = styled.div`
   text-align: center;
@@ -96,64 +95,33 @@ const Dialog = ({
   nameID,
   ingredientsID,
   directionsID,
-  handleClose,
   submitID,
   closeID,
-  handleAdd,
-  handleEdit,
+  handleSubmit,
   buttonType,
-  currRecipe,
-  name,
-  ings,
-  dirs
+  currRecipe
 }) => (
   <DialogWrapper>
     <h2>{dialogType}</h2>
-    <div className="input-title">Recipe</div>
-    <textarea
-      rows="1"
-      id={nameID}
-      placeholder="Recipe Name"
-      defaultValue={buttonType === "Save" ? currRecipe.recipe.replace(/-/g, " ") : null}
-      ref={name}
-    />
-    <div className="input-title">Ingredients</div>
-    <textarea
-      id={ingredientsID}
-      placeholder={"Separate each ingredient with a '\\': \n\nMilk \\ 2 Eggs \\ 1/3 Cup Sugar"}
-      defaultValue={buttonType === "Save" ? currRecipe.ingredients.join(" \\ ") : null}
-      ref={ings}
-    />
-    <br />
-    <div className="input-title">Directions</div>
-    <textarea
-      id={directionsID}
-      defaultValue={buttonType === "Save" ? currRecipe.directions.join(" \\\n\n") : null}
-      placeholder={
-        "Separate each step with a '\\': \n\nPreheat over to 350°F \\ \nCombine ingredients in pie crust \\ \nBake until crust is golden brown"
+    <DialogForm
+      nameID={nameID}
+      ingredientsID={ingredientsID}
+      directionsID={directionsID}
+      buttonType={buttonType}
+      currRecipe={currRecipe}
+      submitRecipe={handleSubmit}
+      submitID={submitID}
+      closeID={closeID}
+      initialValues={
+        buttonType === "Save"
+          ? {
+              recipe: currRecipe.recipe.replace(/-/g, " "),
+              ingredients: currRecipe.ingredients.join(" \\ "),
+              directions: currRecipe.directions.join(" \\\n\n")
+            }
+          : null
       }
-      ref={dirs}
     />
-    <br />
-    <Link to={`/${currRecipe.recipe.toLowerCase()}`}>
-      <button className="corner-close" onClick={handleClose}>
-        <FaTimes />
-      </button>
-    </Link>
-    <Link to={`/${currRecipe.recipe.toLowerCase()}`}>
-      <button
-        id={submitID}
-        onClick={buttonType === "Save" ? handleEdit : handleAdd}
-        className="unstyle-button submit-btn"
-      >
-        {buttonType}
-      </button>
-    </Link>
-    <Link to={`/${currRecipe.recipe.toLowerCase()}`}>
-      <button id={closeID} onClick={handleClose} className="unstyle-button edit-btn">
-        Close
-      </button>
-    </Link>
   </DialogWrapper>
 );
 
@@ -162,16 +130,15 @@ Dialog.propTypes = {
   nameID: PropTypes.string.isRequired,
   ingredientsID: PropTypes.string.isRequired,
   directionsID: PropTypes.string.isRequired,
-  handleClose: PropTypes.func.isRequired,
   submitID: PropTypes.string.isRequired,
   closeID: PropTypes.string.isRequired,
-  handleAdd: PropTypes.func.isRequired,
-  handleEdit: PropTypes.func.isRequired,
   buttonType: PropTypes.string.isRequired,
-  currRecipe: PropTypes.isRequired,
-  name: PropTypes.isRequired,
-  ings: PropTypes.isRequired,
-  dirs: PropTypes.isRequired
+  handleSubmit: PropTypes.func.isRequired,
+  currRecipe: PropTypes.shape({
+    recipe: PropTypes.string.isRequired,
+    ingredients: PropTypes.arrayOf(PropTypes.string).isRequired,
+    directions: PropTypes.arrayOf(PropTypes.string).isRequired
+  }).isRequired
 };
 
 export default Dialog;

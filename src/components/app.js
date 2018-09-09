@@ -1,10 +1,10 @@
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import * as actionCreators from "./actions/actionCreators";
+import * as actionCreators from "../actions/actionCreators";
 import Main from "./main";
 
 function mapStateToProps(state) {
-  return { recipes: [...state.recipes] };
+  return { recipes: [...state.recipes], form: state.form };
 }
 
 function mapDispatchToProps(dispatch) {

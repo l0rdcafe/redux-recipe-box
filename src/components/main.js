@@ -24,6 +24,17 @@ class Main extends React.Component {
       this.props.recipes.length > 1 ? this.props.recipes[this.props.recipes.length - 1] : this.props.recipes[0];
     this.setRecipe(currRecipe);
   };
+  handleSubmit = type => {
+    const { currRecipe } = this.state;
+    const { recipe, ingredients, directions } = this.props.form.recipeModal.values;
+    const i = this.props.recipes.findIndex(r => r.recipe.toLowerCase() === currRecipe.recipe.toLowerCase());
+
+    if (type === "Save") {
+      this.handleEdit(recipe, ingredients.split("\\ "), directions.split("\\ "), i);
+    } else {
+      this.handleAdd(recipe, ingredients.split("\\ "), directions.split("\\ "));
+    }
+  };
   handleAdd = (name, ingredients, directions) => {
     this.props.addRecipe(name, ingredients, directions);
     const currRecipe = this.props.recipes[this.props.recipes.length - 1];
@@ -43,58 +54,39 @@ class Main extends React.Component {
             {" "}
             <IndexView contents={this.props.recipes} handleClick={this.setRecipe} />
             <Route exact path="/" render={() => <Redirect to={currRecipe ? currRecipe.recipe.toLowerCase() : ""} />} />
-            {this.props.recipes.map(
-              recipe =>
-                console.log(this.props.recipes) || (
-                  <div>
-                    <Route
-                      path={`/${recipe.recipe.toLowerCase()}`}
-                      key={recipe.recipe}
-                      render={() => (
-                        <RecipePane
-                          displayRecipe={recipe}
-                          handleDelete={() =>
-                            this.handleDelete(
-                              this.props.recipes.findIndex(
-                                r => r.recipe.toLowerCase() === currRecipe.recipe.toLowerCase()
-                              )
-                            )
-                          }
-                        />
-                      )}
+            {this.props.recipes.map(recipe => (
+              <div key={recipe.recipe}>
+                <Route
+                  path={`/${recipe.recipe.toLowerCase().replace(/\s+/g, "-")}`}
+                  render={() => (
+                    <RecipePane
+                      displayRecipe={recipe}
+                      handleDelete={() =>
+                        this.handleDelete(
+                          this.props.recipes.findIndex(r => r.recipe.toLowerCase() === currRecipe.recipe.toLowerCase())
+                        )
+                      }
                     />
-                    <Route
-                      key={`edit-${recipe.recipe.toLowerCase()}`}
-                      path={`/${recipe.recipe.toLowerCase()}/edit`}
-                      render={() => (
-                        <Dialog
-                          dialogType="Edit Recipe"
-                          buttonType="Save"
-                          nameID="edit-recipe-name"
-                          ingredientsID="edit-ingredients"
-                          directionsID="edit-directions"
-                          submitID="edit-submit"
-                          closeID="edit-close"
-                          currRecipe={recipe}
-                          name={ref => (this.nameEdit = ref)}
-                          ings={ref => (this.ingsEdit = ref)}
-                          dirs={ref => (this.dirsEdit = ref)}
-                          handleEdit={() =>
-                            this.handleEdit(
-                              this.nameEdit.value.split(" ").join("-"),
-                              this.ingsEdit.value.split("\\"),
-                              this.dirsEdit.value.split("\\"),
-                              this.props.recipes.findIndex(
-                                r => r.recipe.toLowerCase() === currRecipe.recipe.toLowerCase()
-                              )
-                            )
-                          }
-                        />
-                      )}
+                  )}
+                />
+                <Route
+                  path={`/${recipe.recipe.toLowerCase()}/edit`}
+                  render={() => (
+                    <Dialog
+                      dialogType="Edit Recipe"
+                      buttonType="Save"
+                      nameID="edit-recipe-name"
+                      ingredientsID="edit-ingredients"
+                      directionsID="edit-directions"
+                      submitID="edit-submit"
+                      closeID="edit-close"
+                      currRecipe={recipe}
+                      handleSubmit={() => this.handleSubmit("Save")}
                     />
-                  </div>
-                )
-            )}
+                  )}
+                />
+              </div>
+            ))}
             <Route
               path="/new"
               render={() => (
@@ -107,12 +99,7 @@ class Main extends React.Component {
                   submitID="add-submit"
                   closeID="add-close"
                   currRecipe={currRecipe}
-                  handleAdd={() =>
-                    this.handleAdd(this.name.value, this.ings.value.split("\\"), this.dirs.value.split("\\"))
-                  }
-                  name={ref => (this.name = ref)}
-                  ings={ref => (this.ings = ref)}
-                  dirs={ref => (this.dirs = ref)}
+                  handleSubmit={() => this.handleSubmit("Add")}
                 />
               )}
             />
@@ -140,7 +127,28 @@ Main.propTypes = {
   ).isRequired,
   removeRecipe: PropTypes.func.isRequired,
   addRecipe: PropTypes.func.isRequired,
-  editRecipe: PropTypes.func.isRequired
+  editRecipe: PropTypes.func.isRequired,
+  form: PropTypes.shape({
+    recipeModal: PropTypes.shape({
+      registeredFields: PropTypes.shape({
+        recipe: PropTypes.shape({
+          name: PropTypes.string,
+          count: PropTypes.number,
+          type: PropTypes.string
+        }),
+        ingredients: PropTypes.shape({
+          name: PropTypes.string,
+          count: PropTypes.number,
+          type: PropTypes.string
+        }),
+        directions: PropTypes.shape({
+          name: PropTypes.string,
+          count: PropTypes.number,
+          type: PropTypes.string
+        })
+      })
+    })
+  }).isRequired
 };
 
 export default Main;
