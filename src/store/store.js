@@ -10,6 +10,6 @@ const defaultState = {
   recipes
 };
 
-const store = createStore(rootReducer, defaultState, window.__REDUX_DEVTOOLS_EXTENSION);
+const store = createStore(rootReducer, defaultState);
 
 export default store;
