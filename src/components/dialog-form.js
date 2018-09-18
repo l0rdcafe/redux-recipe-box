@@ -3,8 +3,20 @@ import { Field, reduxForm } from "redux-form";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { FaTimes } from "react-icons/fa";
+import DialogActions from "@material-ui/core/DialogActions";
+import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
+import { withStyles } from "@material-ui/core/styles";
 import TextareaWrapper from "./textarea-wrapper";
 import validate from "../utils/validation";
+
+const styles = theme => ({
+  xBtn: {
+    position: "absolute",
+    top: 5,
+    right: 5
+  }
+});
 
 const DialogForm = ({
   nameID,
@@ -15,12 +27,12 @@ const DialogForm = ({
   submitRecipe,
   closeID,
   submitID,
-  handleSubmit
+  handleSubmit,
+  classes
 }) => (
   <form onSubmit={handleSubmit(submitRecipe)}>
-    <div className="input-title">Recipe</div>
     <Field name="recipe" component={TextareaWrapper} rows="1" id={nameID} placeholder="Recipe Name" />
-    <div className="input-title">Ingredients</div>
+    <br />
     <Field
       name="ingredients"
       component={TextareaWrapper}
@@ -28,7 +40,6 @@ const DialogForm = ({
       placeholder={"Separate each ingredient with a '\\': \n\nMilk \\ 2 Eggs \\ 1/3 Cup Sugar"}
     />
     <br />
-    <div className="input-title">Directions</div>
     <Field
       name="directions"
       component={TextareaWrapper}
@@ -38,19 +49,21 @@ const DialogForm = ({
       }
     />
     <br />
-    <Link to={`/${currRecipe.recipe.toLowerCase()}`}>
-      <button className="corner-close">
+    <Link to={`/${currRecipe.recipe.toLowerCase()}`} href={`/${currRecipe.recipe.toLowerCase()}`}>
+      <IconButton className={classes.xBtn}>
         <FaTimes />
-      </button>
+      </IconButton>
     </Link>
-    <button id={submitID} type="submit" className="unstyle-button submit-btn">
-      {buttonType}
-    </button>
-    <Link to={`/${currRecipe.recipe.toLowerCase()}`}>
-      <button id={closeID} className="unstyle-button edit-btn">
-        Close
-      </button>
-    </Link>
+    <DialogActions>
+      <Link to={`/${currRecipe.recipe.toLowerCase()}`} href={`/${currRecipe.recipe.toLowerCase()}`}>
+        <Button id={closeID}>Cancel</Button>{" "}
+      </Link>
+      <Link to={`/${currRecipe.recipe.toLowerCase()}`} href={`/${currRecipe.recipe.toLowerCase()}`}>
+        <Button id={submitID} type="submit" color="primary" variant="raised">
+          {buttonType}
+        </Button>
+      </Link>
+    </DialogActions>
   </form>
 );
 
@@ -67,10 +80,13 @@ DialogForm.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   submitRecipe: PropTypes.func.isRequired,
   closeID: PropTypes.string.isRequired,
-  submitID: PropTypes.string.isRequired
+  submitID: PropTypes.string.isRequired,
+  classes: PropTypes.shape({
+    xBtn: PropTypes.string
+  }).isRequired
 };
 
 export default reduxForm({
   form: "recipeModal",
   validate
-})(DialogForm);
+})(withStyles(styles)(DialogForm));

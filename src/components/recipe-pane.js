@@ -1,82 +1,91 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import styled from "styled-components";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash, FaCircle } from "react-icons/fa";
 import PropTypes from "prop-types";
+import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import IconButton from "@material-ui/core/IconButton";
+import { withStyles } from "@material-ui/core/styles";
 
-const RecipeWrapper = styled.div`
-  .recipe-view {
-    padding: 2%;
+const styles = theme => ({
+  paper: {
+    padding: 15
+  },
+  allCaps: {
+    textTransform: "uppercase"
+  },
+  actionBtn: {
+    float: "right"
   }
+});
 
-  .recipe-view-name {
-    font-size: 1.5rem;
-    color: #000;
-    text-transform: uppercase;
-    text-align: center;
-  }
-
-  .recipe-body {
-    width: 100%;
-  }
-
-  button[title="Edit Recipe"],
-  button[title="Delete Recipe"] {
-    float: right;
-  }
-
-  .unstyle-button {
-    background: none;
-    border: none;
-    outline: none;
-    color: #176f8a;
-    cursor: pointer;
-    transition: opacity 0.25s;
-  }
-
-  .unstyle-button:hover {
-    opacity: 0.6;
-  }
-`;
-
-const RecipePane = ({ displayRecipe, handleDelete }) => {
+const RecipePane = ({ displayRecipe, handleDelete, classes }) => {
   const recipe = (
-    <RecipeWrapper>
-      <div id={displayRecipe.recipe.toLowerCase()} className="recipe-view">
-        <div className="recipe-title">
-          <div className="recipe-view-name title-row">{displayRecipe.recipe.replace(/-/g, " ")}</div>
-          <div className="title-row">
-            <Link to="/">
-              <button
+    <Paper className={classes.paper} elevation={2}>
+      <div id={displayRecipe.recipe.toLowerCase()}>
+        <div>
+          <Typography variant="headline" align="center" color="primary" className={classes.allCaps}>
+            {displayRecipe.recipe.replace(/-/g, " ")}
+          </Typography>
+          <div>
+            <Link to="/" className={classes.actionBtn} href="/">
+              <IconButton
+                color="primary"
+                aria-label="Delete"
+                variant="fab"
                 id={`delete-${displayRecipe.recipe.toLowerCase()}`}
                 onClick={handleDelete}
                 title="Delete Recipe"
                 value={displayRecipe.recipe}
-                className="unstyle-button"
               >
                 <FaTrash size={20} />
-              </button>
+              </IconButton>
             </Link>
-            <Link to={`/${displayRecipe.recipe.toLowerCase()}/edit`}>
-              <button
+            <Link
+              to={`/${displayRecipe.recipe.toLowerCase()}/edit`}
+              href={`/${displayRecipe.recipe.toLowerCase()}/edit`}
+              className={classes.actionBtn}
+            >
+              <IconButton
+                color="primary"
+                variant="fab"
+                aria-label="Edit"
                 id={`edit-${displayRecipe.recipe.toLowerCase()}`}
                 title="Edit Recipe"
                 value={displayRecipe.recipe}
-                className="unstyle-button"
               >
                 <FaEdit size={20} />
-              </button>
+              </IconButton>
             </Link>
           </div>
         </div>
         <div className="recipe-body">
-          <h4>Ingredients:</h4>
-          <ul>{displayRecipe.ingredients.map((ing, j) => <li key={j}>{ing}</li>)}</ul>
-          <h4>Directions:</h4>
-          <ol className="directions list">{displayRecipe.directions.map((step, j) => <li key={j}>{step}</li>)}</ol>
+          <Typography variant="subheading">Ingredients:</Typography>
+          <List>
+            {displayRecipe.ingredients.map((ing, j) => (
+              <ListItem key={j}>
+                <ListItemIcon>
+                  <FaCircle />
+                </ListItemIcon>
+                <ListItemText primary={ing} />
+              </ListItem>
+            ))}
+          </List>
+          <Typography variant="subheading">Directions:</Typography>
+          <List className="directions list">
+            {displayRecipe.directions.map((step, j) => (
+              <ListItem key={j}>
+                <ListItemText primary={`${j + 1}. ${step}`} />
+              </ListItem>
+            ))}
+          </List>
         </div>
       </div>
-    </RecipeWrapper>
+    </Paper>
   );
 
   return <div>{recipe}</div>;
@@ -88,7 +97,10 @@ RecipePane.propTypes = {
     ingredients: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
     directions: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired
   }).isRequired,
-  handleDelete: PropTypes.func.isRequired
+  handleDelete: PropTypes.func.isRequired,
+  classes: PropTypes.shape({
+    paper: PropTypes.string
+  }).isRequired
 };
 
-export default RecipePane;
+export default withStyles(styles)(RecipePane);

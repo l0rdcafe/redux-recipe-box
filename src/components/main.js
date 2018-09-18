@@ -2,9 +2,28 @@ import React from "react";
 import { BrowserRouter as Router, Route, Link, Redirect, Switch } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import PropTypes from "prop-types";
+import Typography from "@material-ui/core/Typography";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Button from "@material-ui/core/Button";
+import { withStyles } from "@material-ui/core/styles";
 import RecipePane from "./recipe-pane";
 import IndexView from "./index-view";
 import Dialog from "./dialog";
+
+const styles = theme => ({
+  navTitle: {
+    flex: 1
+  },
+  "@global": {
+    body: {
+      margin: 0
+    }
+  },
+  main: {
+    margin: 8
+  }
+});
 
 class Main extends React.Component {
   constructor(props) {
@@ -47,68 +66,81 @@ class Main extends React.Component {
   };
   render() {
     const { currRecipe } = this.state;
+    const { classes } = this.props;
     return (
       <Router>
         <Switch>
           <div>
-            {" "}
-            <IndexView contents={this.props.recipes} handleClick={this.setRecipe} />
-            <Route exact path="/" render={() => <Redirect to={currRecipe ? currRecipe.recipe.toLowerCase() : ""} />} />
-            {this.props.recipes.map(recipe => (
-              <div key={recipe.recipe}>
-                <Route
-                  path={`/${recipe.recipe.toLowerCase().replace(/\s+/g, "-")}`}
-                  render={() => (
-                    <RecipePane
-                      displayRecipe={recipe}
-                      handleDelete={() =>
-                        this.handleDelete(
-                          this.props.recipes.findIndex(r => r.recipe.toLowerCase() === currRecipe.recipe.toLowerCase())
-                        )
-                      }
-                    />
-                  )}
-                />
-                <Route
-                  path={`/${recipe.recipe.toLowerCase()}/edit`}
-                  render={() => (
-                    <Dialog
-                      dialogType="Edit Recipe"
-                      buttonType="Save"
-                      nameID="edit-recipe-name"
-                      ingredientsID="edit-ingredients"
-                      directionsID="edit-directions"
-                      submitID="edit-submit"
-                      closeID="edit-close"
-                      currRecipe={recipe}
-                      handleSubmit={() => this.handleSubmit("Save")}
-                    />
-                  )}
-                />
-              </div>
-            ))}
-            <Route
-              path="/new"
-              render={() => (
-                <Dialog
-                  dialogType="Add a Recipe"
-                  buttonType="Add"
-                  nameID="add-recipe-name"
-                  ingredientsID="add-ingredients"
-                  directionsID="add-directions"
-                  submitID="add-submit"
-                  closeID="add-close"
-                  currRecipe={currRecipe}
-                  handleSubmit={() => this.handleSubmit("Add")}
-                />
-              )}
-            />
-            <div className="add-button" style={{ display: "block", margin: "0 auto", textAlign: "center" }}>
-              <Link to="/new">
-                <button style={{ border: "0", padding: "0.5%", cursor: "pointer" }} id="add-recipe" title="Add Recipe">
-                  <FaPlus />
-                </button>
-              </Link>
+            <AppBar position="static">
+              <Toolbar>
+                <Typography variant="display1" color="secondary" className={classes.navTitle}>
+                  Recipe Box
+                </Typography>{" "}
+                <Link to="/new" href="/new">
+                  <Button variant="fab" mini id="add-recipe" title="Add Recipe">
+                    <FaPlus />
+                  </Button>
+                </Link>
+              </Toolbar>
+            </AppBar>
+            <div className={classes.main}>
+              <IndexView contents={this.props.recipes} handleClick={this.setRecipe} />
+              <Route
+                exact
+                path="/"
+                render={() => <Redirect to={currRecipe ? currRecipe.recipe.toLowerCase() : ""} />}
+              />
+              {this.props.recipes.map(recipe => (
+                <div key={recipe.recipe}>
+                  <Route
+                    path={`/${recipe.recipe.toLowerCase().replace(/\s+/g, "-")}`}
+                    render={() => (
+                      <RecipePane
+                        displayRecipe={recipe}
+                        handleDelete={() =>
+                          this.handleDelete(
+                            this.props.recipes.findIndex(
+                              r => r.recipe.toLowerCase() === currRecipe.recipe.toLowerCase()
+                            )
+                          )
+                        }
+                      />
+                    )}
+                  />
+                  <Route
+                    path={`/${recipe.recipe.toLowerCase()}/edit`}
+                    render={() => (
+                      <Dialog
+                        dialogType="Edit Recipe"
+                        buttonType="Save"
+                        nameID="edit-recipe-name"
+                        ingredientsID="edit-ingredients"
+                        directionsID="edit-directions"
+                        submitID="edit-submit"
+                        closeID="edit-close"
+                        currRecipe={recipe}
+                        handleSubmit={() => this.handleSubmit("Save")}
+                      />
+                    )}
+                  />
+                </div>
+              ))}
+              <Route
+                path="/new"
+                render={() => (
+                  <Dialog
+                    dialogType="Add a Recipe"
+                    buttonType="Add"
+                    nameID="add-recipe-name"
+                    ingredientsID="add-ingredients"
+                    directionsID="add-directions"
+                    submitID="add-submit"
+                    closeID="add-close"
+                    currRecipe={currRecipe}
+                    handleSubmit={() => this.handleSubmit("Add")}
+                  />
+                )}
+              />
             </div>
           </div>
         </Switch>
@@ -148,7 +180,10 @@ Main.propTypes = {
         })
       })
     })
+  }).isRequired,
+  classes: PropTypes.shape({
+    navTitle: PropTypes.string
   }).isRequired
 };
 
-export default Main;
+export default withStyles(styles)(Main);

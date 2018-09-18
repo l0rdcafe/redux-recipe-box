@@ -1,9 +1,12 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
+import TextField from "@material-ui/core/TextField";
+import DialogContentText from "@material-ui/core/DialogContentText";
 
-const TextareaWrapper = props => {
+const TextArea = props => {
   const { input, meta } = props;
   let inputBorderColor;
+  let name;
 
   if (meta.valid && meta.touched) {
     inputBorderColor = "green";
@@ -12,16 +15,41 @@ const TextareaWrapper = props => {
   } else {
     inputBorderColor = "";
   }
+
+  if (input.name === "recipe") {
+    name = "Recipe Title";
+  } else if (input.name === "ingredients") {
+    name = "Ingredients";
+  } else {
+    name = "Directions";
+  }
+
   return (
     <Fragment>
-      <textarea {...props} {...input} value={input.value} style={{ borderColor: inputBorderColor }} />
-      {meta.error && meta.touched && !meta.active && <div style={{ color: "red" }}>{meta.error}</div>}
+      <TextField
+        id={name.toLowerCase().replace(/\s+/g, "-")}
+        type="text"
+        label={name}
+        multiline={name !== "Recipe Title"}
+        rows={name !== "Recipe Title" ? "4" : null}
+        margin="dense"
+        {...props}
+        {...input}
+        value={input.value}
+        style={{ borderColor: inputBorderColor }}
+        fullWidth
+      >
+        {meta.error &&
+          meta.touched &&
+          !meta.active && <DialogContentText style={{ color: "red" }}>{meta.error}</DialogContentText>}
+      </TextField>
     </Fragment>
   );
 };
 
-TextareaWrapper.propTypes = {
-  input: PropTypes.isRequired
+TextArea.propTypes = {
+  input: PropTypes.isRequired,
+  meta: PropTypes.isRequired
 };
 
-export default TextareaWrapper;
+export default TextArea;
