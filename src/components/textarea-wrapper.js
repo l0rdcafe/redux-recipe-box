@@ -1,20 +1,10 @@
 import React, { Fragment } from "react";
 import PropTypes from "prop-types";
 import TextField from "@material-ui/core/TextField";
-import DialogContentText from "@material-ui/core/DialogContentText";
 
 const TextArea = props => {
-  const { input, meta } = props;
-  let inputBorderColor;
+  const { input, meta, ...custom } = props;
   let name;
-
-  if (meta.valid && meta.touched) {
-    inputBorderColor = "green";
-  } else if (meta.invalid && meta.touched && !meta.active) {
-    inputBorderColor = "red";
-  } else {
-    inputBorderColor = "";
-  }
 
   if (input.name === "recipe") {
     name = "Recipe Title";
@@ -30,19 +20,15 @@ const TextArea = props => {
         id={name.toLowerCase().replace(/\s+/g, "-")}
         type="text"
         label={name}
+        helperText={!meta.active && meta.touched ? meta.error : ""}
+        error={meta.touched && meta.error && !meta.active}
         multiline={name !== "Recipe Title"}
         rows={name !== "Recipe Title" ? "4" : null}
         margin="dense"
-        {...props}
         {...input}
-        value={input.value}
-        style={{ borderColor: inputBorderColor }}
+        {...custom}
         fullWidth
-      >
-        {meta.error &&
-          meta.touched &&
-          !meta.active && <DialogContentText style={{ color: "red" }}>{meta.error}</DialogContentText>}
-      </TextField>
+      />
     </Fragment>
   );
 };

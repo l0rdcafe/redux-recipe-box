@@ -28,7 +28,8 @@ const DialogForm = ({
   closeID,
   submitID,
   handleSubmit,
-  classes
+  classes,
+  invalid
 }) => (
   <form onSubmit={handleSubmit(submitRecipe)}>
     <Field name="recipe" component={TextareaWrapper} rows="1" id={nameID} placeholder="Recipe Name" />
@@ -59,7 +60,7 @@ const DialogForm = ({
         <Button id={closeID}>Cancel</Button>{" "}
       </Link>
       <Link to={`/${currRecipe.recipe.toLowerCase()}`} href={`/${currRecipe.recipe.toLowerCase()}`}>
-        <Button id={submitID} type="submit" color="primary" variant="raised">
+        <Button id={submitID} type="submit" color="primary" variant="raised" disabled={invalid}>
           {buttonType}
         </Button>
       </Link>
@@ -83,7 +84,8 @@ DialogForm.propTypes = {
   submitID: PropTypes.string.isRequired,
   classes: PropTypes.shape({
     xBtn: PropTypes.string
-  }).isRequired
+  }).isRequired,
+  invalid: PropTypes.bool.isRequired
 };
 
 export default reduxForm({
