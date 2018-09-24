@@ -2,14 +2,14 @@ import recipes from "../../src/data/recipes";
 
 describe("app routing", () => {
   it("redirects '/' path to second recipe path in recipes array", () => {
-    cy.visit("http://localhost:3000")
+    cy.visit("https://redux-recipe-box.surge.sh")
       .url()
       .should("include", recipes[1].recipe.toLowerCase());
   });
 
   it("routes app to recipe page after clicking recipe name", () => {
     const randomRecipe = recipes[Math.floor(Math.random() * recipes.length)].recipe.toLowerCase();
-    cy.visit("http://localhost:3000")
+    cy.visit("https://redux-recipe-box.surge.sh")
       .get(`#view-${randomRecipe}`)
       .click()
       .url()
@@ -20,7 +20,7 @@ describe("app routing", () => {
 describe("CRUD functionality", () => {
   it("deletes current recipe when trash button is clicked", () => {
     const randomRecipe = recipes[Math.floor(Math.random() * recipes.length)].recipe.toLowerCase();
-    cy.visit(`http://localhost:3000/`)
+    cy.visit(`https://redux-recipe-box.surge.sh/`)
       .get(`#view-${randomRecipe}`)
       .click()
       .get(`#delete-${randomRecipe}`)
@@ -36,7 +36,7 @@ describe("CRUD functionality", () => {
     const randomRecipeName = randomRecipe.recipe.toLowerCase();
     const randomRecipeIngs = randomRecipe.ingredients.join(" \\ ");
     const randomRecipeDirs = randomRecipe.directions.join(" \\\n\n");
-    cy.visit(`http://localhost:3000/`)
+    cy.visit(`https://redux-recipe-box.surge.sh/`)
       .get(`#view-${randomRecipeName}`)
       .click()
       .get(`#edit-${randomRecipeName}`)
@@ -52,7 +52,7 @@ describe("CRUD functionality", () => {
   it("exits edit dialog form when 'X' is clicked", () => {
     const randomRecipe = recipes[Math.floor(Math.random() * recipes.length)];
     const randomRecipeName = randomRecipe.recipe.toLowerCase();
-    cy.visit(`http://localhost:3000/`)
+    cy.visit(`https://redux-recipe-box.surge.sh/`)
       .get(`#view-${randomRecipeName}`)
       .click()
       .get(`#edit-${randomRecipeName}`)
@@ -66,7 +66,7 @@ describe("CRUD functionality", () => {
   it("exits edit dialog form when Cancel button is clicked", () => {
     const randomRecipe = recipes[Math.floor(Math.random() * recipes.length)];
     const randomRecipeName = randomRecipe.recipe.toLowerCase();
-    cy.visit(`http://localhost:3000/`)
+    cy.visit(`https://redux-recipe-box.surge.sh/`)
       .get(`#view-${randomRecipeName}`)
       .click()
       .get(`#edit-${randomRecipeName}`)
@@ -77,8 +77,41 @@ describe("CRUD functionality", () => {
       .should("include", randomRecipeName);
   });
 
+  it("edits a recipe and routes to updates version", () => {
+    const randomRecipe = recipes[Math.floor(Math.random() * recipes.length)];
+    const randomRecipeName = randomRecipe.recipe.toLowerCase();
+    cy.visit("https://redux-recipe-box.surge.sh")
+      .get(`#view-${randomRecipeName}`)
+      .click()
+      .get(`#edit-${randomRecipeName}`)
+      .click()
+      .get("#edit-recipe-name")
+      .clear()
+      .type("Lamb Kabab")
+      .get("#edit-submit")
+      .click()
+      .url()
+      .should("include", "lamb-kabab")
+      .get("#lamb-kabab")
+      .should("exist");
+  });
+
+  it("shows a dialog with empty form fields when add button is clicked", () => {
+    cy.visit("https://redux-recipe-box.surge.sh")
+      .get("#add-recipe")
+      .click()
+      .get("#add-recipe-name")
+      .should("be.empty")
+      .get("#add-ingredients")
+      .should("be.empty")
+      .get("#add-directions")
+      .should("be.empty");
+  });
+
   it("button is disabled when at least one form field is empty", () => {
-    cy.visit("http://localhost:3000/new")
+    cy.visit("https://redux-recipe-box.surge.sh/")
+      .get("#add-recipe")
+      .click()
       .get("#add-submit")
       .should("have.attr", "disabled")
       .get("#add-recipe-name")
@@ -92,7 +125,9 @@ describe("CRUD functionality", () => {
   });
 
   it("button is enabled when all form fields are populated", () => {
-    cy.visit("http://localhost:3000/new")
+    cy.visit("https://redux-recipe-box.surge.sh/")
+      .get("#add-recipe")
+      .click()
       .get("#add-recipe-name")
       .type("test")
       .get("#add-submit")
@@ -106,7 +141,9 @@ describe("CRUD functionality", () => {
   });
 
   it("adds a new recipe and routes to it", () => {
-    cy.visit("http://localhost:3000/new")
+    cy.visit("https://redux-recipe-box.surge.sh/")
+      .get("#add-recipe")
+      .click()
       .get("#add-recipe-name")
       .type("Test Recipe")
       .get("#add-submit")
@@ -120,25 +157,6 @@ describe("CRUD functionality", () => {
       .url()
       .should("include", "test-recipe")
       .get("#test-recipe")
-      .should("exist");
-  });
-
-  it("edits a recipe and routes to updates version", () => {
-    const randomRecipe = recipes[Math.floor(Math.random() * recipes.length)];
-    const randomRecipeName = randomRecipe.recipe.toLowerCase();
-    cy.visit("http://localhost:3000")
-      .get(`#view-${randomRecipeName}`)
-      .click()
-      .get(`#edit-${randomRecipeName}`)
-      .click()
-      .get("#edit-recipe-name")
-      .clear()
-      .type("Lamb Kabab")
-      .get("#edit-submit")
-      .click()
-      .url()
-      .should("include", "lamb-kabab")
-      .get("#lamb-kabab")
       .should("exist");
   });
 });
