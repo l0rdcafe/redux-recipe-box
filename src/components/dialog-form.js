@@ -46,12 +46,12 @@ const DialogForm = ({
       component={TextareaWrapper}
       id={directionsID}
       placeholder={
-        "Separate each step with a '\\': \n\nPreheat over to 350°F \\ \nCombine ingredients in pie crust \\ \nBake until crust is golden brown"
+        "Separate each step with a '\\': \n\nPreheat over to 350°F \\ Combine ingredients in pie crust \\ Bake until crust is golden brown"
       }
     />
     <br />
     <Link to={`/${currRecipe.recipe.toLowerCase()}`} href={`/${currRecipe.recipe.toLowerCase()}`}>
-      <IconButton className={classes.xBtn}>
+      <IconButton className={classes.xBtn} id="cancel">
         <FaTimes />
       </IconButton>
     </Link>
@@ -59,11 +59,9 @@ const DialogForm = ({
       <Link to={`/${currRecipe.recipe.toLowerCase()}`} href={`/${currRecipe.recipe.toLowerCase()}`}>
         <Button id={closeID}>Cancel</Button>{" "}
       </Link>
-      <Link to={`/${currRecipe.recipe.toLowerCase()}`} href={`/${currRecipe.recipe.toLowerCase()}`}>
-        <Button id={submitID} type="submit" color="primary" variant="raised" disabled={invalid}>
-          {buttonType}
-        </Button>
-      </Link>
+      <Button id={submitID} type="submit" color="primary" onClick={submitRecipe} variant="raised" disabled={invalid}>
+        {buttonType}
+      </Button>
     </DialogActions>
   </form>
 );

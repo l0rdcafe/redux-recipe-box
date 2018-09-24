@@ -26,7 +26,7 @@ const styles = theme => ({
 const RecipePane = ({ displayRecipe, handleDelete, classes }) => {
   const recipe = (
     <Paper className={classes.paper} elevation={2}>
-      <div id={displayRecipe.recipe.toLowerCase()}>
+      <div id={displayRecipe.recipe.toLowerCase().replace(/\s+/g, "-")}>
         <div>
           <Typography variant="headline" align="center" color="primary" className={classes.allCaps}>
             {displayRecipe.recipe.replace(/-/g, " ")}

@@ -21,7 +21,11 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "npm-run-all --parallel  npm start node_modules/.bin/cypress run",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "cypress": "^3.1.0",
+    "npm-run-all": "^4.1.3"
   }
 }
