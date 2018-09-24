@@ -27,6 +27,7 @@
     "deploy": "surge build redux-recipe-box.surge.sh"
   },
   "devDependencies": {
-    "cypress": "^3.1.0"
+    "cypress": "^3.1.0",
+    "surge": "^0.20.1"
   }
 }
