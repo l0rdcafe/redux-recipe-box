@@ -1,7 +1,8 @@
-import React from "react";
+// @flow
+
+import React, { Component } from "react";
 import { Route, Link, Redirect, withRouter } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
-import PropTypes from "prop-types";
 import Typography from "@material-ui/core/Typography";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -25,11 +26,35 @@ const styles = theme => ({
   }
 });
 
-class Main extends React.Component {
+type MainProps = {
+  recipes: Array<{ recipe: string, ingredients: string[], directions: string[] }>,
+  removeRecipe: (i: number) => void,
+  addRecipe: (name: string, ingredients: string[], directions: string[]) => void,
+  editRecipe: (name: string, ingredients: string[], directions: string[], i: number) => void,
+  form: {
+    recipeModal: {
+      recipe: { name: string, count: number, type: string },
+      ingredients: { name: string, count: number, type: string },
+      directions: { name: string, count: number, type: string },
+      values: { recipe: string, ingredients: string, directions: string }
+    }
+  },
+  classes: { navTitle: string, main: string },
+  history: { push: (path: string) => void }
+};
+
+type MainState = any;
+
+class Main extends Component<MainProps, MainState> {
   constructor(props) {
     super(props);
+    let currRecipe;
 
-    const currRecipe = this.props.recipes.length > 1 ? this.props.recipes[1] : this.props.recipes[0];
+    if (this.props.recipes.length > 1) {
+      [, currRecipe] = this.props.recipes;
+    } else {
+      [currRecipe] = this.props.recipes;
+    }
 
     this.state = { currRecipe };
   }
@@ -61,7 +86,6 @@ class Main extends React.Component {
   };
   handleEdit = (name, ingredients, directions, i) => {
     this.props.editRecipe(name, ingredients, directions, i);
-    console.log(directions);
     const formattedName = name.toLowerCase().replace(/\s+/g, "-");
     const currRecipe = this.props.recipes[i];
     this.setRecipe(currRecipe);
@@ -141,42 +165,5 @@ class Main extends React.Component {
     );
   }
 }
-
-Main.propTypes = {
-  recipes: PropTypes.arrayOf(
-    PropTypes.shape({
-      recipe: PropTypes.string.isRequired,
-      ingredients: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
-      directions: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired
-    })
-  ).isRequired,
-  removeRecipe: PropTypes.func.isRequired,
-  addRecipe: PropTypes.func.isRequired,
-  editRecipe: PropTypes.func.isRequired,
-  form: PropTypes.shape({
-    recipeModal: PropTypes.shape({
-      registeredFields: PropTypes.shape({
-        recipe: PropTypes.shape({
-          name: PropTypes.string,
-          count: PropTypes.number,
-          type: PropTypes.string
-        }),
-        ingredients: PropTypes.shape({
-          name: PropTypes.string,
-          count: PropTypes.number,
-          type: PropTypes.string
-        }),
-        directions: PropTypes.shape({
-          name: PropTypes.string,
-          count: PropTypes.number,
-          type: PropTypes.string
-        })
-      })
-    })
-  }).isRequired,
-  classes: PropTypes.shape({
-    navTitle: PropTypes.string
-  }).isRequired
-};
 
 export default withStyles(styles)(withRouter(Main));

@@ -1,8 +1,14 @@
+// @flow
+
 import React, { Fragment } from "react";
-import PropTypes from "prop-types";
 import TextField from "@material-ui/core/TextField";
 
-const TextArea = props => {
+type TextAreaProps = {
+  input: { name: string },
+  meta: { error: string, touched: Boolean, active: Boolean }
+};
+
+const TextArea = (props: TextAreaProps) => {
   const { input, meta, ...custom } = props;
   let name;
 
@@ -31,11 +37,6 @@ const TextArea = props => {
       />
     </Fragment>
   );
-};
-
-TextArea.propTypes = {
-  input: PropTypes.isRequired,
-  meta: PropTypes.isRequired
 };
 
 export default TextArea;

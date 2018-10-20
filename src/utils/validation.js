@@ -1,4 +1,6 @@
-const validate = values => {
+// @flow
+
+const validate = (values: { recipe: string, ingredients: string, directions: string }) => {
   const errors = {};
 
   if (!values.recipe) {

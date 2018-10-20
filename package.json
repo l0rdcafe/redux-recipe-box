@@ -4,7 +4,6 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^3.1.0",
-    "prop-types": "^15.6.2",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
     "react-icons": "^3.0.5",
@@ -19,6 +18,8 @@
     "styled-components": "^3.4.5"
   },
   "scripts": {
+    "flow": "flow",
+    "flow-typed": "flow-typed install",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "npm-run-all --parallel  npm start node_modules/.bin/cypress run",
@@ -28,6 +29,8 @@
   },
   "devDependencies": {
     "cypress": "^3.1.0",
+    "flow-bin": "^0.83.0",
+    "flow-typed": "^2.5.1",
     "surge": "^0.20.1"
   }
 }

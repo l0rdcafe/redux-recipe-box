@@ -1,4 +1,9 @@
-function recipes(state = [], action) {
+// @flow
+
+function recipes(
+  state: [] = [],
+  action: { name?: string, i?: number, ingredients?: string[], directions?: string[], type: string }
+) {
   switch (action.type) {
     case "ADD_RECIPE":
       return [...state, { recipe: action.name, ingredients: action.ingredients, directions: action.directions }];

@@ -1,10 +1,15 @@
+// @flow
+
 import { createStore } from "redux";
 import recipeIndex from "../data/recipes";
 import rootReducer from "../reducers/index";
 import LSM from "../utils/local-storage-manager";
 
-const recipes =
-  !LSM.get("recipe-item") || LSM.get("recipe-item").length === 0 ? [...recipeIndex] : LSM.get("recipe-item");
+let recipes = LSM.get();
+
+if (!recipes || recipes.length === 0) {
+  recipes = [...recipeIndex];
+}
 
 const defaultState = {
   recipes
